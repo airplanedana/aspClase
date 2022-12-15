@@ -60,7 +60,7 @@ namespace ASPClase
             {
                 if (person.Value.Month == Calendar1.SelectedDate.Month && person.Value.Day == Calendar1.SelectedDate.Day)
                 {
-                    ShowDate.Text += "<br> Es el cumple de " + person.Key;
+                    ShowDate.Text += "<br> Es el cumpleaños de " + person.Key;
                 }
             }
         }
