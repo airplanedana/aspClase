@@ -9,9 +9,6 @@ namespace ASPClase
 {
     public partial class Calculadora : System.Web.UI.Page
     {
-        static private int operando1, operando2, resultado;
-        static private char operador = ' ';
-
         protected void Page_Load(object sender, EventArgs e)
         {
         }
@@ -37,10 +34,10 @@ namespace ASPClase
             {
                 Button btn = (Button)sender;
 
-                operando1 = Convert.ToInt32(textBox.Text);
+                Session["operando1"] = Convert.ToInt32(textBox.Text);
                 textBox.Text = "";
-                operador = btn.Text[0];
-                textBox.Text += operador;
+                Session["operador"] = btn.Text[0];
+                textBox.Text += Session["operador"];
             }
             catch (FormatException ex)
             {
@@ -56,36 +53,42 @@ namespace ASPClase
         {
             try
             {
-                if (operador == ' ')
+                // Si no se ha elegido un operador sale error
+                if (Session["operador"] == null)
                     throw new FormatException();
-                
-                operando2 = Convert.ToInt32(textBox.Text);
+
+                Session["operando2"] = Convert.ToInt32(textBox.Text);
                 textBox.Text = "";
 
-                switch (operador)
+                // Hacemos calculo segun el operador
+                switch (Session["operador"])
                 {
                     case '+':
-                        resultado = operando1 + operando2;
+                        Session["resultado"] = (int) Session["operando1"] + (int) Session["operando2"];
                         break;
 
                     case '-':
-                        resultado = operando1 - operando2;
+                        Session["resultado"] = (int) Session["operando1"] - (int) Session["operando2"];
                         break;
 
                     case '*':
-                        resultado = operando1 * operando2;
+                        Session["resultado"] = (int) Session["operando1"] * (int) Session["operando2"];
                         break;
 
                     case '/':
-                        resultado = operando1 / operando2;
+                        Session["resultado"] = (int) Session["operando1"] / (int) Session["operando2"];
                         break;
 
                     default:
                         break;
                 }
 
-                textBox.Text += resultado;
-                operando1 = resultado;
+                // Mostramos resultado, lo guardamos en primer operando y borramos el operador y segundo operando
+                textBox.Text += Session["resultado"];
+                Session["operando1"] = Session["resultado"];
+
+                Session["operador"] = null;
+                Session["operando2"] = null;
             }
             catch (FormatException ex)
             {
@@ -101,10 +104,10 @@ namespace ASPClase
         {
             textBox.Text = "";
             errores.Text = "";
-            operador = ' ';
-            operando1 = 0;
-            operando2 = 0;
-            resultado = 0;
+            Session["operador"] = null;
+            Session["operando1"] = null;
+            Session["operando2"] = null;
+            Session["resultado"] = null;
         }
     }
 }
